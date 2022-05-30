@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>Update Orders</title>
+<style>
+	.table {
+		margin: auto;
+		margin-top: 15px;
+	}
+	thead th:first-child {
+		width: 10%;
+	}
+	thead th:last-child,
+	thead th:nth-last-child(2) {
+		width: 10%;
+	}
+	thead th,
+	tbody tr td {
+		text-align: center;
+		background-color: white;
+	}
+	img {
+		width: 100%;
+	}
+</style>
+{% endblock %}
+{% block body %}
+{% include "nav.html" %}
+{% if orders %}
+<div class="orders-wrapper">
+	<table class="table" style="width: 97.5%;">
+		<thead class="thead-dark">
+			<tr>
+				<th scope="col">Image</th>
+				<th scope="col">Name</th>
+				<th scope="col">Price</th>
+				<th scope="col">Ordered By</th>
+				<th scope="col">Status</th>
+				<th scope="col"></th>
+				<th scope="col"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for order in orders %}
+			{% ifequal order.product.seller_id user.id %}
+			<tr>
+				<form method="POST">
+					{% csrf_token %}
+					<input type="hidden" name="id" value="{{order.id}}">
+					<td><img src="{{order.product.product_pic.url}}"></td>
+					<td style="vertical-align: middle;">{{order.product.name}}</td>
+					<td style="vertical-align: middle;">&#8369;{{order.product.price}}</td>
+					<td style="vertical-align: middle;">{{order.buyer}}</td>
+					<td style="vertical-align: middle;">
+						<select name="status" id="id_status">
+							<option value="Pending" selected>Pending</option>
+							<option value="Delivered">Delivered</option>
+						</select>
+					</td>
+					<td style="vertical-align: middle;"><button type="submit" class="btn btn-success">Update</button></td>
+					<td style="vertical-align: middle;"><a class="btn btn-danger" href="{% url 'delete-order' order.id %}?redirect={{request.path}}">Delete</a></td>
+				</form>
+			</tr>
+			{% endifequal %}
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% else %}
+<p class="not-found">No pending orders found.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>Home</title>
+<style>
+	.products-wrapper {
+		margin: 15px;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-evenly;
+		align-items: center;
+		background-color: white;
+		padding: 30px 0;
+		padding-bottom: 5px;
+		border-radius: 5px;
+		border: 1px solid #ddd;
+	}
+	.card {
+		margin-bottom: 25px;
+	}
+	.order-btn-wrapper {
+		text-align: right;
+	}
+</style>
+{% endblock %}
+{% block body %}
+{% include "nav.html" %}
+{% if products %}
+<div class="products-wrapper">
+	{% for product in products %}
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="{{product.product_pic.url}}" alt="Card image cap">
+      <div class="card-body">
+				<h4 class="card-title">{{product.name}}</h4>
+				<h5>&#8369;{{product.price}}</h5>
+        <p class="card-text">{{product.description}}</p>
+				<h6>Seller: {{product.seller}}</h6>
+				<form action="{% url 'create-order' %}" method="POST">
+					{% csrf_token %}
+					<div style="display: none;">
+						<select name="product" required id="id_product">
+							<option value="{{product.id}}" selected>{{product.name}}</option>
+						</select>
+						<select name="buyer" required id="id_buyer">
+							<option value="{{user.id}}">{{user}}</option>
+						</select>
+					</div>
+					<div class="order-btn-wrapper">
+        		<button type="submit" class="btn btn-primary">Order</button>
+					</div>
+				</form>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="not-found">No items found.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block head %}
+	<title>Login</title>
+	<style>
+		form {
+			position: absolute;
+			top: 45%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 35vw;
+			border: 1px solid #999;
+			padding: 20px;
+			border-radius: 5px;
+			background-color: white;
+		}
+		.last {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
+		}
+	</style>
+{% endblock %}
+{% block body %}
+<form method="POST">
+	{% csrf_token %}
+  <div class="form-group">
+    <label for="exampleInputEmail1">Username</label>
+    <input type="text" class="form-control" name="username" placeholder="Username" required>
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control" name="password" placeholder="Password" required>
+  </div>
+  <div class="last">
+  	<button type="submit" class="btn btn-primary">Login</button>
+		<a href="{% url 'register' %}">Register</a>
+	</div>
+	{% include "messages.html" %}
+</form>
+{% endblock %}

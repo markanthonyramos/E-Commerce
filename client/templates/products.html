@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>Products</title>
+<style>
+  .row {
+    justify-content: space-evenly;
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .card-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+  .card-wrapper > div {
+    margin-bottom: 25px;
+  }
+  .delete-btn {
+    position: absolute;
+    right: 0;
+    border-radius: 50%;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 2px 9px;
+    font-weight: bold;
+    margin: 5px;
+  }
+  .delete-btn:hover {
+    color: white;
+    text-decoration: none;
+    filter: brightness(80%);
+  }
+  .see-more-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .see-more-wrapper p {
+    margin: 0;
+  }
+</style>
+{% endblock %}
+{% block body %}
+{% include "nav.html" %}
+<div class="row mt-3">
+  <div class="col-sm ml-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Total Products</h5>
+        <p class="card-text" style="margin-top: 21px;margin-bottom: 5px;">{{products.count}} Products</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Pending Orders</h5>
+        <div class="see-more-wrapper">
+          <p class="card-text">{{pending_orders.count}} Orders</p>
+          <a class="btn btn-primary" href="{% url 'update-order' %}">See more</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm mr-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Sold Products</h5>
+        <div class="see-more-wrapper">
+          <p class="card-text">{{sold_products.count}} Products</p>
+          <a class="btn btn-primary" href="{% url 'sold-products' %}">See more</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card mr-3 ml-3 mt-3 mb-3">
+  <div class="card-header">
+    <div>
+      All Products
+    </div>
+    <div>
+      <a class="btn btn-success" href="{% url 'create-product' %}">New Product</a>
+    </div>
+  </div>
+  <div class="card-body card-wrapper mt-3 pb-2">
+    {% if products %}
+    {% for product in products %}
+    <div class="card" style="width: 15rem;">
+      <a class="delete-btn" href="{% url 'delete-product' product.id %}">X</a>
+      <img class="card-img-top" src="{% if product.product_pic.url is not None %}{{product.product_pic.url}}{% endif %}" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">{{product.name}}</h5>
+        <h6>&#8369;{{product.price}}</h6>
+        <p class="card-text">{{product.description}}</p>
+        <a href="{% url 'update-product' product.id %}" class="btn btn-primary">Edit Product</a>
+      </div>
+    </div>
+    {% endfor %}
+    {% else %}
+      <p style="font-size: 28px;">No products found.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

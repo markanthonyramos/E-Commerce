@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>Orders</title>
+<style>
+	.table {
+		margin: auto;
+		margin-top: 15px;
+	}
+	thead th:first-child {
+		width: 10%;
+	}
+	thead th:last-child {
+		width: 10%;
+	}
+	thead th:nth-last-child(2) {
+		width: 30%;
+	}
+	thead th,
+	tbody tr td {
+		text-align: center;
+		background-color: white;
+	}
+	img {
+		width: 100%;
+	}
+</style>
+{% endblock %}
+{% block body %}
+{% include "nav.html" %}
+{% if orders %}
+<div class="orders-wrapper">
+	<table class="table" style="width: 97.5%;">
+		<thead class="thead-dark">
+			<tr>
+				<th scope="col">Image</th>
+				<th scope="col">Name</th>
+				<th scope="col">Price</th>
+				<th scope="col">Date Ordered</th>
+				<th scope="col"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for order in orders %}
+			<tr>
+				<td><img src="{{order.product.product_pic.url}}"></td>
+				<td style="vertical-align: middle;">{{order.product.name}}</td>
+				<td style="vertical-align: middle;">&#8369;{{order.product.price}}</td>
+				<td style="vertical-align: middle;">{{order.created_at}}</td>
+				<td style="vertical-align: middle;">
+					<a class="btn btn-danger" href="{% url 'delete-order' order.id %}?redirect={{request.path}}">Delete</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% else %}
+<p class="not-found">No orders found.</p>
+{% endif %}
+{% endblock %}

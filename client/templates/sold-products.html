@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block head %}
+<title>Sold Products</title>
+<style>
+  .row {
+    justify-content: space-evenly;
+  }
+	.see-more-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .see-more-wrapper p {
+    margin: 0;
+  }
+	.table {
+		margin: auto;
+		margin-top: 15px;
+	}
+	thead th:first-child,
+	thead th:nth-last-child(2) {
+		width: 10%;
+	}
+	thead th:last-child {
+		width: 25%;
+	}
+	thead th,
+	tbody tr td {
+		text-align: center;
+		background-color: white;
+	}
+	img {
+		width: 100%;
+	}
+</style>
+{% endblock %}
+{% block body %}
+{% include "nav.html" %}
+{% if orders %}
+<div class="row mt-3">
+  <div class="col-sm ml-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Total Customers</h5>
+        <p class="card-text">{{total_customers}} Customers</p>
+      </div>
+    </div>
+  </div>
+	<div class="col-sm mr-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Total Profit</h5>
+        <p class="card-text">{{profit.profit | floatformat:"2" | intcomma}} Pesos</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="orders-wrapper">
+	<table class="table" style="width: 97.5%;">
+		<thead class="thead-dark">
+			<tr>
+				<th scope="col">Image</th>
+				<th scope="col">Name</th>
+				<th scope="col">Price</th>
+				<th scope="col">Ordered By</th>
+				<th scope="col">Quantity</th>
+				<th scope="col">Date Ordered</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for order in orders %}
+			{% ifchanged order.product.id %}
+			<tr>
+				<td><img src="{{order.product.product_pic.url}}"></td>
+				<td style="vertical-align: middle;">{{order.product.name}}</td>
+				<td style="vertical-align: middle;">&#8369;{{order.product.price}}</td>
+				<td style="vertical-align: middle;">{{order.buyer}}</td>
+				<td style="vertical-align: middle;">{% for q in quantity %}{% ifequal order.product.id q.product__id %}{{q.count}}{% endifequal %}{% endfor %}</td>
+				<td style="vertical-align: middle;">{{order.created_at}}</td>
+			</tr>
+			{% endifchanged %}
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% else %}
+<p class="not-found">No sold products found.</p>
+{% endif %}
+{% endblock %}
